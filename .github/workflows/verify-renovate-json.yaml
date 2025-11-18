@@ -11,6 +11,7 @@ jobs:
       - name: Verify renovate deafult.json
         env:
           RENOVATE_VERSION: 42.14.1
+          RENOVATE_CONFIG_FILE: renovate.json
         run: |
           npx --yes renovate --version
           npx --yes --package renovate@${RENOVATE_VERSION} -- renovate-config-validator 
