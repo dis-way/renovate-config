@@ -1,0 +1,19 @@
+name: "Verify Renovate JSON"
+
+on: pull_request
+
+jobs:
+  verify-renovate-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: '24'
+      - name: Verify renovate deafult.json
+        env:
+          RENOVATE_VERSION: 42.14.1
+          RENOVATE_CONFIG_FILE: default.json
+        run: |
+          npx --yes --package renovate@${RENOVATE_VERSION} -- renovate-config-validator 

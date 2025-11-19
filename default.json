@@ -1,0 +1,63 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
+  "description": "Groups minor and patch updates together in a single PR, and treat NPM 0.x.x updates as major updates.",
+  "minimumReleaseAge": "3 days",
+  "timezone": "Europe/Oslo",
+  "internalChecksFilter": "strict",
+  "configMigration": true,
+  "ignorePresets": ["group:monorepos"],
+  "rebaseWhen": "conflicted",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "dockerfile",
+        "github-actions",
+        "terraform",
+        "gomod"
+      ],
+      "groupName": "{{manager}} non-major dependencies",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupSlug": "{{manager}}-minor-patch"
+    },
+    {
+      "matchManagers": [
+        "npm"
+      ],
+      "groupName": "npm non-major dependencies",
+      "matchCurrentVersion": ">=1.0.0",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupSlug": "npm-minor-patch"
+    },
+    {
+      "matchManagers": [
+        "dockerfile",
+        "github-actions"
+      ],
+      "pinDigests": true
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)(.*?/)*.*?\\.ya?ml$/",
+        "/(^|/)(.*?/)*.*?\\.sh$/",
+        "/(^|/)(.*?/)*Dockerfile$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s+?default: (?<currentValue>.+?)\\s",
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?(?: extractVersion=(?<extractVersion>.+?))?\\s+?.+?_VERSION\\s?=\\s?\"?v?(?<currentValue>.+?)\"?(\\s|$)",
+        "# renovate: datasource=(?<datasource>helm) registryUrl=(?<registryUrl>(?:https://|oci://)[^\\s]+) packageName=(?<packageName>.+?)\\s+?version:\\s['\"]?(?<currentValue>[^\\s'\"#]+)['\"]?"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ]
+}
