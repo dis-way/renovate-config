@@ -10,7 +10,9 @@
   "timezone": "Europe/Oslo",
   "internalChecksFilter": "strict",
   "configMigration": true,
-  "ignorePresets": ["group:monorepos"],
+  "ignorePresets": [
+    "group:monorepos"
+  ],
   "rebaseWhen": "conflicted",
   "ignorePaths": [
     "**/node_modules/**",
@@ -26,8 +28,13 @@
         "gomod"
       ],
       "groupName": "{{manager}} non-major dependencies",
-      "matchPackageNames": ["*"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupSlug": "{{manager}}-minor-patch"
     },
     {
@@ -36,8 +43,13 @@
       ],
       "groupName": "npm non-major dependencies",
       "matchCurrentVersion": ">=1.0.0",
-      "matchPackageNames": ["*"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupSlug": "npm-minor-patch"
     },
     {
@@ -48,6 +60,14 @@
       "pinDigests": true
     }
   ],
+  "customDatasources": {
+    "azure-aks": {
+      "defaultRegistryUrlTemplate": "https://endoflife.date/api/azure-kubernetes-service.json",
+      "transformTemplates": [
+        "{ \"releases\": $[eol != true].{ \"version\": cycle, \"releaseTimestamp\": releaseDate } }"
+      ]
+    }
+  },
   "customManagers": [
     {
       "customType": "regex",
@@ -62,6 +82,15 @@
         "# renovate: datasource=(?<datasource>helm) registryUrl=(?<registryUrl>(?:https://|oci://)[^\\s]+) packageName=(?<packageName>.+?)\\s+?version:\\s['\"]?(?<currentValue>[^\\s'\"#]+)['\"]?"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "\\.tf$"
+      ],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)\\s+versioning=(?<versioning>\\S+)\\n\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ]
     }
   ]
 }
