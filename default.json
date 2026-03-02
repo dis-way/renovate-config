@@ -58,6 +58,12 @@
         "github-actions"
       ],
       "pinDigests": true
+    },
+    {
+      "matchManagers": [
+        "regex"
+      ],
+      "pinDigests": false
     }
   ],
   "customDatasources": {
