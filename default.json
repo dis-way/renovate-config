@@ -7,6 +7,7 @@
   ],
   "description": "Groups minor and patch updates together in a single PR, and treat NPM 0.x.x updates as major updates.",
   "minimumReleaseAge": "3 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
   "timezone": "Europe/Oslo",
   "internalChecksFilter": "strict",
   "configMigration": true,
@@ -64,6 +65,16 @@
         "regex"
       ],
       "pinDigests": false
+    },
+    {
+      "description": "First-party Altinn platform images need no release-age cooldown",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/altinn/altinn-platform/**"
+      ],
+      "minimumReleaseAge": null
     }
   ],
   "customDatasources": {
